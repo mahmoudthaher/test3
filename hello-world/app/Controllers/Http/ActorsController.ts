@@ -1,50 +1,54 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Database from '@ioc:Adonis/Lucid/Database'
+import Actor from 'App/Models/Actor';
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
 export default class ActorsController {
     public async getAll(ctx: HttpContextContract) {
-        return Database.from("actors").select("*");
+        var result = Actor.all();
+        return result;
     }
 
     public async getById(ctx: HttpContextContract) {
         var id = ctx.params.id;
-        var result = await Database.from("actors").select("*").where("id", id);
-        return result[0];
+        var result = await Actor.findOrFail(id);
+        return result;
     }
 
     public async create(ctx: HttpContextContract) {
+        const newSchema = schema.create({
+            first_name: schema.string(),
+            last_name: schema.string(),
+        });
+        const fields = await ctx.request.validate({ schema: newSchema })
+        var actor = new Actor();
+        actor.firstName = fields.first_name;
+        actor.lastName = fields.last_name;
+        var result = await actor.save();
+        return result;
+        // return { message: "The actors has been created!" };
 
-        var fields = ctx.request.all();
-        const result = await Database
-            .table('actors')
-            .insert({
-                id: fields.id,
-                first_name: fields.first_name,
-                last_name: fields.last_name,
-            });
-            return { message: "The actors has been created!" };
 
-        //var newObject = await Database.from("actors").select("*").where("id", id)
-        //return newObject[0];
     }
 
     public async update(ctx: HttpContextContract) {
 
-        var fields = ctx.request.all();
-        await Database
-            .from('actors')
-            .where('id', fields.id)
-            .update({ first_name: fields.first_name, last_name: fields.last_name });
+        const newSchema = schema.create({
+            first_name: schema.string(),
+            last_name: schema.string(),
+            id: schema.number(),
+        });
+        const fields = await ctx.request.validate({ schema: newSchema })
+        var id = fields.id;
+        var actor = await Actor.findOrFail(id);
+        actor.firstName = fields.first_name;
+        actor.lastName = fields.last_name;
+        await actor.save();
         return { message: "The actors has been updated!" };
     }
 
     public async destory(ctx: HttpContextContract) {
         var id = ctx.params.id;
-
-        await Database
-            .from('actors')
-            .where('id', id)
-            .delete();
-        return { message: "The actors has been deleted!" };
-
+        var actor = await Actor.findOrFail(id);
+        await actor.delete();
+        return { message: "The actor has been deleted!" };
     }
 }

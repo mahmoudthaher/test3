@@ -1,54 +1,53 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Database from '@ioc:Adonis/Lucid/Database'
+import Store from 'App/Models/Store';
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
 export default class StoresController {
     public async getAll(ctx: HttpContextContract) {
-        return Database.from("stores").select("*");
+        var result= Store.all();
+        return result;
     }
 
     public async getById(ctx: HttpContextContract) {
         var id = ctx.params.id;
-        var result = await Database.from("stores").select("*").where("id", id);
-        return result[0];
+        var result = await Store.findOrFail(id);
+        return result;
     }
 
     public async create(ctx: HttpContextContract) {
 
-        var fields = ctx.request.all();
-        const result = await Database
-            .table('stores')
-            .insert({
-
-                manager_staff_id: fields.manager_staff_id,
-                address_id: fields.address_id
-
-            });
-        var id = result[0];
-
-        var newObject = await Database.from("stores").select("*").where("id", id)
-        return newObject[0];
+        const newSchema = schema.create({
+            manager_staff_id: schema.number(),
+            address_id:schema.number()
+        });
+        const fields = await ctx.request.validate({ schema: newSchema })
+        const store = new Store();
+        store.managerStaffId = fields.manager_staff_id;
+        store.addressId=fields.address_id;
+        var result = await store.save();
+        return result;
     }
 
     public async update(ctx: HttpContextContract) {
 
-        var fields = ctx.request.all();
-        await Database
-            .from('stores')
-            .where('id', fields.id)
-            .update({
-                manager_staff_id: fields.manager_staff_id,
-                address_id: fields.address_id
-            });
-        return { message: "The stores has been updated!" };
+        
+        const newSchema = schema.create({
+            manager_staff_id: schema.number(),
+            address_id:schema.number(),
+            id: schema.number(),
+        });
+        const fields = await ctx.request.validate({ schema: newSchema })
+        var id = fields.id;
+        var store = await store.findOrFail(id);
+        store.managerStaffId = fields.manager_staff_id;
+        store.addressId=fields.address_id;
+        await store.save();
+        return { message: "The store has been updated!" };
     }
 
     public async destory(ctx: HttpContextContract) {
         var id = ctx.params.id;
-
-        await Database
-            .from('stores')
-            .where('id', id)
-            .delete();
-        return { message: "The stores has been deleted!" };
-
+        var store = await Store.findOrFail(id);
+        await store.delete();
+        return { message: "The store has been deleted!" };
     }
 }
