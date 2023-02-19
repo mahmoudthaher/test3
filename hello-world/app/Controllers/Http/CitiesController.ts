@@ -1,37 +1,51 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Database from '@ioc:Adonis/Lucid/Database'
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
+import City from 'App/Models/City'
+
 export default class CitiesController {
+
     public async getAll(ctx: HttpContextContract) {
-        return Database.from('cities').select('*');
+        var result = City.all();
+        return result;
     }
 
     public async getById(ctx: HttpContextContract) {
         var id = ctx.params.id;
-        const result = await Database.from('cities').select('*').where('id', id);
-        return result[0];
+        const result = City.findOrFail(id);
+        return result;
     }
 
     public async create(ctx: HttpContextContract) {
-        var fields = ctx.request.all();
-        await Database.table('cities').insert({
-            city: fields.city,
-            country_id:fields.country_id
-        });
-        return ({ message: "the city has been insert" });
-    }
-
-    public async update(ctx: HttpContextContract) {
-        var fields = ctx.request.all();
-        await Database.from('cities').where('id', fields.id).update({
-            city: fields.city,
-            country_id:fields.country_id
+        const newSchema = schema.create({
+            city: schema.string(),
+            countryId: schema.number()
         })
-        return ({ message: "the city has been updated" })
+        const fields = await ctx.request.validate({ schema: newSchema })
+        var city = new City();
+        city.city = fields.city;
+        city.countryId = fields.countryId;
+        var result = await city.save();
+        return result;
+    }
+    public async update(ctx: HttpContextContract) {
+        const newSchema = schema.create({
+            city: schema.string(),
+            countryId: schema.number(),
+            id: schema.number()
+        })
+        const fields = await ctx.request.validate({ schema: newSchema });
+        var id = fields.id
+        var city = await City.findOrFail(id)
+        city.city = fields.city;
+        city.countryId = fields.countryId;
+        var result = await city.save();
+        return result;
     }
 
     public async delete(ctx: HttpContextContract) {
-        var id=ctx.params.id;
-        await Database.from('cities').where('id',id).delete();
-        return ({message:"the city has been deleted"})
+        var id = ctx.params.id;
+        var city = await City.findOrFail(id);
+        await city.delete();
+        return { message: "the city has been deleted" }
     }
 }
