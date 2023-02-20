@@ -1,16 +1,20 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
-export default class Country extends BaseModel {
+export default class FilmText extends BaseModel {
 
-  public static table = 'countries'
+  public static table ='film_text'
 
   @column({ isPrimary: true })
   public id: number
 
-  @column({ serializeAs: "country" })
-  public country: string
-  
+  @column({ serializeAs: "title" })
+  public title: string
+
+  @column({ serializeAs: "description" })
+  public description: string
+
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

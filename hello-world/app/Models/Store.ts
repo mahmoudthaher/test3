@@ -2,12 +2,18 @@ import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Store extends BaseModel {
+
+  public static table = 'stores'
+
   @column({ isPrimary: true })
   public id: number
+
   @column({ serializeAs: "manager_staff_id" })
-  public managerStaffId :number
+  public managerStaffId: number
+
   @column({ serializeAs: "address_id" })
-  public addressId:number
+  public addressId: number
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

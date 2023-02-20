@@ -14,19 +14,20 @@ export default class ActorsController {
     }
 
     public async create(ctx: HttpContextContract) {
+
         const newSchema = schema.create({
             first_name: schema.string(),
             last_name: schema.string(),
+            id:schema.number(),
+          
         });
         const fields = await ctx.request.validate({ schema: newSchema })
         var actor = new Actor();
         actor.firstName = fields.first_name;
         actor.lastName = fields.last_name;
+        actor.id=fields.id
         var result = await actor.save();
         return result;
-        // return { message: "The actors has been created!" };
-
-
     }
 
     public async update(ctx: HttpContextContract) {
