@@ -21,7 +21,7 @@ export default class Payment extends BaseModel {
   public amount: number
 
   @column({ serializeAs: "payment_date" })
-  public paymentDate: DateTime
+  public paymentDate: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

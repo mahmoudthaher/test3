@@ -12,7 +12,7 @@ export default class Film extends BaseModel {
   public title: string
 
   @column({ serializeAs: "description" })
-  public description: number
+  public description: string
 
   @column({ serializeAs: "release_year" })
   public releaseYear: DateTime

@@ -27,7 +27,7 @@ export default class Staff extends BaseModel {
   public active: number
 
   @column({ serializeAs: "username" })
-  public userName: string
+  public username: string
 
   @column({ serializeAs: "password" })
   public password: string
