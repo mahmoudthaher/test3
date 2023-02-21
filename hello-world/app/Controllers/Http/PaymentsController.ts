@@ -1,10 +1,11 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
+import { DateTime } from 'luxon';
 import Payment from 'App/Models/Payment';
 export default class PaymentsController {
 
     public async getAll(ctx: HttpContextContract) {
-        var result= Payment.all();
+        var result= await Payment.query().preload("customer");
         return result;
     }
 
@@ -21,15 +22,15 @@ export default class PaymentsController {
             staffId:schema.number(),
             rentalId: schema.number(),
             amount: schema.number(),
-            paymentDate: schema.string()
         });
         const fields = await ctx.request.validate({ schema: newSchema })
+        const date=ctx.request.all()
         const payment = new Payment();
         payment.customerId = fields.customerId;
         payment.staffId = fields.staffId;
-        payment.customerId = fields.customerId;
+        payment.rentalId = fields.rentalId;
         payment.amount = fields.amount;
-        payment.paymentDate = fields.paymentDate;
+        payment.paymentDate = date.paymentDate;
         var result = await payment.save();
         return result;
     }
@@ -41,17 +42,18 @@ export default class PaymentsController {
             staffId:schema.number(),
             rentalId: schema.number(),
             amount: schema.number(),
-            paymentDate: schema.string(),
+           // paymentDate: schema.string(),
             id:schema.number()
         });
         const fields = await ctx.request.validate({ schema: newSchema })
+        const date=ctx.request.all()
         var id = fields.id;
         var payment = await Payment.findOrFail(id);
         payment.customerId = fields.customerId;
         payment.staffId = fields.staffId;
         payment.customerId = fields.customerId;
         payment.amount = fields.amount;
-        payment.paymentDate = fields.paymentDate;
+        payment.paymentDate = date.paymentDate;
         await payment.save();
         return { message: "The payment has been updated!" };
     }

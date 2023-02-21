@@ -3,7 +3,7 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import Inventory from 'App/Models/Inventory';
 export default class InventoriesController {
     public async getAll(ctx: HttpContextContract) {
-        var result= Inventory.all();
+        var result= await Inventory.query().preload("film");
         return result;
     }
 

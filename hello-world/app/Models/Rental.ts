@@ -1,5 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import Inventory from './Inventory'
+import Customer from './Customer'
+import Staff from './Staff'
 
 export default class Rental extends BaseModel {
 
@@ -9,7 +12,7 @@ export default class Rental extends BaseModel {
   public id: number
 
   @column({ serializeAs: "rental_date" })
-  public rentalDate: string
+  public rentalDate: DateTime
 
   @column({ serializeAs: "inventory_id" })
   public inventoryId: number
@@ -18,7 +21,7 @@ export default class Rental extends BaseModel {
   public customerId: number
 
   @column({ serializeAs: "return_date" })
-  public returnDate: string
+  public returnDate: DateTime
 
   @column({ serializeAs: "staff_id" })
   public staffId: number
@@ -28,4 +31,20 @@ export default class Rental extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @belongsTo(() => Inventory, {
+    foreignKey: 'inventoryId',
+  })
+  public inventory: BelongsTo<typeof Inventory>
+
+  @belongsTo(() => Customer, {
+    foreignKey: 'customerId',
+  })
+  public customer: BelongsTo<typeof Customer>
+
+  @belongsTo(() => Staff, {
+    foreignKey: 'staffId',
+  })
+  public staff: BelongsTo<typeof Staff>
+
 }

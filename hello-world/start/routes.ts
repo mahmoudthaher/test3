@@ -1,6 +1,5 @@
-
 import Route from '@ioc:Adonis/Core/Route'
-import { Group } from '@japa/runner';
+
 Route.group(() => {
     Route.get('/orders/:products-id', 'ProductsController.getOrdersByProductsId');
     Route.get('/:id/edit', 'ProductsController.getProductsByIdForEdit');

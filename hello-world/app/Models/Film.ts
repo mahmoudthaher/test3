@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import Language from './Language'
 
 export default class Film extends BaseModel {
 
@@ -46,5 +47,11 @@ export default class Film extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @belongsTo(() => Language, {
+    foreignKey: 'languageId',
+  })
+  public language: BelongsTo<typeof Language>
+
 }
   

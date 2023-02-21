@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import Film from './Film'
+import Actor from './Actor'
 
 export default class FilmActor extends BaseModel {
 
@@ -19,4 +21,14 @@ export default class FilmActor extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @belongsTo(() => Actor, {
+    foreignKey: 'actorId',
+  })
+  public actor: BelongsTo<typeof Actor>
+
+  @belongsTo(() => Film, {
+    foreignKey: 'filmId',
+  })
+  public film: BelongsTo<typeof Film>
 }

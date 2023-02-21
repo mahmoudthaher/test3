@@ -3,7 +3,7 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import FilmCategory from 'App/Models/FilmCategory';
 export default class FilmCategoriesController {
     public async getAll(ctx: HttpContextContract) {
-        var result = FilmCategory.all();
+        var result = await FilmCategory.query().preload("film");
         return result;
     }
 

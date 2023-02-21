@@ -3,7 +3,7 @@ import Country from 'App/Models/Country';
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 export default class CountriesController {
     public async getAll(ctx: HttpContextContract) {
-        var result= Country.all();
+        var result= await Country.all();
         return result;
     }
 

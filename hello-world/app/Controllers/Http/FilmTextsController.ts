@@ -3,7 +3,7 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import FilmText from 'App/Models/FilmText';
 export default class FilmTextsController {
     public async getAll(ctx: HttpContextContract) {
-        var result = FilmText.all();
+        var result = await FilmText.all();
         return result;
     }
 

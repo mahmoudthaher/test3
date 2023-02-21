@@ -5,7 +5,7 @@ import City from 'App/Models/City'
 export default class CitiesController {
 
     public async getAll(ctx: HttpContextContract) {
-        var result = City.all();
+        var result = await City.query().preload("country");
         return result;
     }
 

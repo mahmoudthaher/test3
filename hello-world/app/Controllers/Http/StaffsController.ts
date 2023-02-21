@@ -1,9 +1,9 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import Staff from 'App/Models/Staff';
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
 export default class StaffsController {
     public async getAll(ctx: HttpContextContract) {
-        var result= Staff.all();
+        var result= await Staff.query().preload("address");
         return result;
     }
 

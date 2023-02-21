@@ -4,7 +4,7 @@ import Address from 'App/Models/Address';
 
 export default class AddressesController {
     public async getAll(ctx: HttpContextContract) {
-        var result = Address.all();
+        var result =await Address.query().preload("city");
         return result;
     }
 

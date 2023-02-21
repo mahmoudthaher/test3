@@ -3,7 +3,7 @@ import FilmActor from 'App/Models/FilmActor';
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 export default class FilmActorsController {
     public async getAll(ctx: HttpContextContract) {
-        var result = FilmActor.all();
+        var result = await FilmActor.query().preload("film");
         return result;
     }
 

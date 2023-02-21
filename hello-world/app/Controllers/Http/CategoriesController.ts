@@ -4,7 +4,7 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator'
 
 export default class CategoriesController {
     public async getAll(ctx: HttpContextContract) {
-        var result= Category.all();
+        var result = await Category.all();
         return result;
     }
 

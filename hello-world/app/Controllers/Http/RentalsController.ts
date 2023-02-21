@@ -3,7 +3,7 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import Rental from 'App/Models/Rental';
 export default class RentalsController {
     public async getAll(ctx: HttpContextContract) {
-        var result= Rental.all();
+        var result= await Rental.query().preload("customer");
         return result;
     }
 
@@ -16,10 +16,10 @@ export default class RentalsController {
     public async create(ctx: HttpContextContract) {
 
         const newSchema = schema.create({
-            rentalDate: schema.string(),
+            rentalDate: schema.date({format: "uuuu-MM-dd'T'HH:mm:ss.SSSZZZ"}),
             inventoryId:schema.number(),
             customerId: schema.number(),
-            returnDate: schema.string(),
+            returnDate: schema.date({format: "uuuu-MM-dd'T'HH:mm:ss.SSSZZZ"}),
             staffId: schema.number()
         });
         const fields = await ctx.request.validate({ schema: newSchema })

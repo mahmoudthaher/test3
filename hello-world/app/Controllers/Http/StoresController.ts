@@ -3,7 +3,7 @@ import Store from 'App/Models/Store';
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 export default class StoresController {
     public async getAll(ctx: HttpContextContract) {
-        var result= Store.all();
+        var result= await Store.query().preload("managerStaff");
         return result;
     }
 
