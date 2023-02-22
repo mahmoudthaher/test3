@@ -4,11 +4,13 @@ import Language from 'App/Models/Language';
 
 export default class LanguagesController {
     public async getAll(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var result = await Language.all();
         return result
     }
 
     public async getById(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var id = ctx.params.id;
         const result = await Language.findOrFail(id);
         return result;

@@ -11,7 +11,13 @@ Route.group(() => {
 }).prefix("/products");
 
 Route.group(() => {
-    
+    Route.group(() => {
+        Route.get("/", "UsersController.getAll");
+        Route.post("/login", "UsersController.login");
+        Route.post("/logout", "UsersController.logout");
+        Route.post("/", "UsersController.create");
+      }).prefix("/users");
+
     Route.group(() => {
         Route.get("/:id", "ActorsController.getById");
         Route.get("/", "ActorsController.getAll");

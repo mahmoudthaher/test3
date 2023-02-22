@@ -28,7 +28,7 @@ export default class Inventory extends BaseModel {
   public film: BelongsTo<typeof Film>
 
   @belongsTo(() => Store, {
-    foreignKey: 'store_id',
+    foreignKey: 'storeId',
   })
   public store: BelongsTo<typeof Store>
 }

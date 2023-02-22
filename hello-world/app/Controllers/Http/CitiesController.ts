@@ -5,13 +5,15 @@ import City from 'App/Models/City'
 export default class CitiesController {
 
     public async getAll(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var result = await City.query().preload("country");
         return result;
     }
 
     public async getById(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var id = ctx.params.id;
-        const result = City.findOrFail(id);
+        const result = await City.query().preload("country").where('id',id)
         return result;
     }
 

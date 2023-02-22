@@ -4,13 +4,15 @@ import Address from 'App/Models/Address';
 
 export default class AddressesController {
     public async getAll(ctx: HttpContextContract) {
-        var result =await Address.query().preload("city");
+        const token = await ctx.auth.authenticate();
+        var result =await Address.query().preload("city")
         return result;
     }
 
     public async getById(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var id = ctx.params.id;
-        var result = await Address.findOrFail(id);
+        var result = await Address.query().preload("city").where('id',id)
         return result;
     }
 

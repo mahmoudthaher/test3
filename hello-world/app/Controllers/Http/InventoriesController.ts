@@ -3,13 +3,15 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import Inventory from 'App/Models/Inventory';
 export default class InventoriesController {
     public async getAll(ctx: HttpContextContract) {
-        var result= await Inventory.query().preload("film");
+        const token = await ctx.auth.authenticate();
+        var result= await Inventory.query().preload("film").preload("store");
         return result;
     }
 
     public async getById(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var id = ctx.params.id;
-        var result = await Inventory.findOrFail(id);
+        var result = await Inventory.query().preload("film").preload("store").where('id',id);
         return result;
     }
 

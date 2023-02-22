@@ -5,13 +5,15 @@ import Payment from 'App/Models/Payment';
 export default class PaymentsController {
 
     public async getAll(ctx: HttpContextContract) {
-        var result= await Payment.query().preload("customer");
+        const token = await ctx.auth.authenticate();
+        var result = await Payment.query().preload("customer").preload("rental").preload("staff");
         return result;
     }
 
     public async getById(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var id = ctx.params.id;
-        var result = await Payment.findOrFail(id);
+        var result = await Payment.query().preload("customer").preload("rental").preload("staff").where('id', id);
         return result;
     }
 
@@ -19,12 +21,12 @@ export default class PaymentsController {
 
         const newSchema = schema.create({
             customerId: schema.number(),
-            staffId:schema.number(),
+            staffId: schema.number(),
             rentalId: schema.number(),
             amount: schema.number(),
         });
         const fields = await ctx.request.validate({ schema: newSchema })
-        const date=ctx.request.all()
+        const date = ctx.request.all()
         const payment = new Payment();
         payment.customerId = fields.customerId;
         payment.staffId = fields.staffId;
@@ -39,14 +41,13 @@ export default class PaymentsController {
 
         const newSchema = schema.create({
             customerId: schema.number(),
-            staffId:schema.number(),
+            staffId: schema.number(),
             rentalId: schema.number(),
             amount: schema.number(),
-           // paymentDate: schema.string(),
-            id:schema.number()
+            id: schema.number()
         });
         const fields = await ctx.request.validate({ schema: newSchema })
-        const date=ctx.request.all()
+        const date = ctx.request.all()
         var id = fields.id;
         var payment = await Payment.findOrFail(id);
         payment.customerId = fields.customerId;

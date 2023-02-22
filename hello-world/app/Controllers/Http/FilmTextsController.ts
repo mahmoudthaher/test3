@@ -3,11 +3,13 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import FilmText from 'App/Models/FilmText';
 export default class FilmTextsController {
     public async getAll(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var result = await FilmText.all();
         return result;
     }
 
     public async getById(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var id = ctx.params.id;
         var result = await FilmText.findOrFail(id);
         return result;

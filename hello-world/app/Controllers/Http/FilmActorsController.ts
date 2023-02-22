@@ -3,13 +3,15 @@ import FilmActor from 'App/Models/FilmActor';
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 export default class FilmActorsController {
     public async getAll(ctx: HttpContextContract) {
-        var result = await FilmActor.query().preload("film");
+        const token = await ctx.auth.authenticate();
+        var result = await FilmActor.query().preload("film").preload("actor");
         return result;
     }
 
     public async getById(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var id = ctx.params.id;
-        var result = await FilmActor.findOrFail(id);
+        var result = await FilmActor.query().preload("film").preload("actor").where('id',id);
         return result;
     }
 

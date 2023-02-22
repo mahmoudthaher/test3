@@ -3,10 +3,12 @@ import Actor from 'App/Models/Actor';
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 export default class ActorsController {
     public async getAll(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var result = await Actor.all();
         return result;
     }
     public async getById(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var id = ctx.params.id;
         var result = await Actor.findOrFail(id);
         return result;

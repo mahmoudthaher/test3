@@ -3,13 +3,15 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import FilmCategory from 'App/Models/FilmCategory';
 export default class FilmCategoriesController {
     public async getAll(ctx: HttpContextContract) {
-        var result = await FilmCategory.query().preload("film");
+        const token = await ctx.auth.authenticate();
+        var result = await FilmCategory.query().preload("film").preload("category");
         return result;
     }
 
     public async getById(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var id = ctx.params.id;
-        var result = await FilmCategory.findOrFail(id);
+        var result = await FilmCategory.query().preload("film").preload("category").where('id',id)
         return result;
     }
 

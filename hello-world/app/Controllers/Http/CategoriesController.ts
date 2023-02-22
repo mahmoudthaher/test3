@@ -4,11 +4,13 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator'
 
 export default class CategoriesController {
     public async getAll(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var result = await Category.all();
         return result;
     }
 
     public async getById(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var id = ctx.params.id;
         var result = await Category.findOrFail(id);
         return result;

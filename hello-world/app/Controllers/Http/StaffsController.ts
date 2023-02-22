@@ -3,13 +3,15 @@ import Staff from 'App/Models/Staff';
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 export default class StaffsController {
     public async getAll(ctx: HttpContextContract) {
-        var result= await Staff.query().preload("address");
+        const token = await ctx.auth.authenticate();
+        var result= await Staff.query().preload("address").preload("store");
         return result;
     }
 
     public async getById(ctx: HttpContextContract) {
+        const token = await ctx.auth.authenticate();
         var id = ctx.params.id;
-        var result = await Staff.findOrFail(id);
+        var result = await Staff.query().preload("address").preload("store").where('id',id)
         return result;
     }
 
